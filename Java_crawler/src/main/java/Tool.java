@@ -9,8 +9,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -118,9 +116,8 @@ public class Tool {
 
             // 解析json字符串
             JSONObject json_res = JSONObject.fromObject(jsonstr);
-            String str_arr = json_res.getString("trans_result");
-            res = str_arr;
 
+            String str_arr = json_res.getString("trans_result");
             // 字符串提取出数组
             String [] arr_res = str_arr.split(",");
 
@@ -134,10 +131,20 @@ public class Tool {
                 res = m.group(1);
             }
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // 使用finally块来关闭输入流
+        finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+
 
         return res;
 
@@ -146,11 +153,12 @@ public class Tool {
     // 实现整个List数组翻译
     public List<String> translateArray(final List arr){
 
-        // 线程池处理数据请求
-        ExecutorService executor = Executors.newFixedThreadPool(arr.size());
+
         for (int i = 0; i < arr.size(); i++) {
             arr.set(i, translate(arr.get(i).toString()));
-
+            // 延时执行，保持QPS（每秒请求量）控制到1
+            try { Thread.currentThread().sleep(1000);}
+            catch(Exception e){}
         }
 
         return arr;

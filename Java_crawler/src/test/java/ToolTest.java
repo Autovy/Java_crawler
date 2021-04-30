@@ -1,11 +1,5 @@
-import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import us.codecraft.webmagic.selector.Json;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ToolTest {
 
